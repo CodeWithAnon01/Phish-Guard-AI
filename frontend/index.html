@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard | AI Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="terminal-container">
+        <header>
+            <div class="glitch-wrapper">
+                <h1 class="glitch" data-text="PHISHGUARD_SYSTEM">PHISHGUARD_SYSTEM</h1>
+            </div>
+            <p class="subtitle">>>> AI-DRIVEN REAL-TIME CYBER THREAT DETECTION_</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <span class="prompt">TARGET_URL></span>
+                <input type="text" id="url-input" placeholder="Enter target URL for neural analysis..." autocomplete="off">
+                <button id="analyze-btn">[ EXECUTE ]</button>
+            </div>
+
+            <div id="error-box" class="hidden error-box"></div>
+
+            <div id="loader" class="hidden">
+                <div class="scanner-box">
+                    <div class="scanner-laser"></div>
+                    <p class="scanning-text">INJECTING URL INTO ENSEMBLE ENGINE...</p>
+                </div>
+            </div>
+
+            <div id="results" class="hidden">
+                <div class="verdict-panel" id="verdict-banner">
+                    <div class="verdict-icon" id="verdict-icon"></div>
+                    <div class="verdict-details">
+                        <h2 id="verdict-text">VERDICT</h2>
+                        <div class="confidence">CONFIDENCE SCORE: <span id="confidence-val">--</span></div>
+                    </div>
+                </div>
+
+                <div class="probabilities">
+                    <div class="prob-card">
+                        <div class="prob-header">
+                            <span>RANDOM FOREST MODULE</span>
+                            <span id="rf-prob-val">--</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar rf-bar" id="rf-bar"></div>
+                        </div>
+                        <p class="prob-desc">Structural heuristics mapping</p>
+                    </div>
+                    <div class="prob-card">
+                        <div class="prob-header">
+                            <span>LSTM SEQUENCE MODULE</span>
+                            <span id="lstm-prob-val">--</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar lstm-bar" id="lstm-bar"></div>
+                        </div>
+                        <p class="prob-desc">Lexical tokenization analysis</p>
+                    </div>
+                </div>
+
+                <div class="threat-matrix-section">
+                    <h3>[ SHAP_EXPLAINABILITY_MATRIX ]</h3>
+                    <div class="chart-container" id="threat-chart">
+                        <!-- Chart rows injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

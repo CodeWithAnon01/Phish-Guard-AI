@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Model artifacts (too large for git — host separately)
+models/rf_model.pkl
+models/lstm_model.pt
+models/rf_feature_names.pkl
+models/lstm_config.pkl
+
+# Training data (too large for git)
+data/uci_train.pkl
+data/uci_test.pkl
+data/kaggle_train.pkl
+data/kaggle_test.pkl
+data/char_vocab.pkl
+
+# Raw datasets folder
+datasets/
+
+# Logs
+*.log
+uvicorn.log
+
+# Environment secrets
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
