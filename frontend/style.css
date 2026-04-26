@@ -59,7 +59,7 @@ button:hover { background: var(--cyan); color: #000; }
 .hidden { display: none !important; }
 .error-box { border: 1px solid var(--red); color: var(--red); padding: 1rem; margin-bottom: 1.5rem; background: rgba(255, 0, 60, 0.05); }
 
-/* Scanner Effect */
+
 .scanner-box { border: 1px dashed var(--cyan); height: 100px; position: relative; display: flex; align-items: center; justify-content: center; background: rgba(0, 240, 255, 0.02); margin-bottom: 2rem; overflow: hidden;}
 .scanner-laser { position: absolute; left: 0; top: 0; width: 100%; height: 2px; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); animation: scan 1.5s linear infinite alternate; }
 .scanning-text { color: var(--cyan); font-size: 0.9rem; animation: pulse 1s infinite; }
@@ -67,7 +67,7 @@ button:hover { background: var(--cyan); color: #000; }
 @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-/* Results */
+
 .verdict-panel { display: flex; align-items: center; padding: 1.5rem; border: 1px solid var(--border); margin-bottom: 2rem; }
 .verdict-icon { font-size: 3rem; margin-right: 1.5rem; }
 .verdict-details h2 { font-size: 1.8rem; margin-bottom: 0.2rem; }
@@ -78,7 +78,7 @@ button:hover { background: var(--cyan); color: #000; }
 .verdict-panel.danger { border-color: var(--red); background: rgba(255, 0, 60, 0.05); }
 .verdict-panel.danger h2, .verdict-panel.danger .verdict-icon { color: var(--red); }
 
-/* Probabilities Bars */
+
 .probabilities { display: flex; gap: 2rem; margin-bottom: 2rem; }
 .prob-card { flex: 1; border: 1px solid var(--border); padding: 1rem; background: rgba(255,255,255,0.01); }
 .prob-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: bold; color: var(--text-muted); }
@@ -88,7 +88,7 @@ button:hover { background: var(--cyan); color: #000; }
 .lstm-bar { background: #b026ff; }
 .prob-desc { font-size: 0.75rem; color: #555; }
 
-/* Threat Matrix Chart */
+
 .threat-matrix-section h3 { margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--cyan); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
 .chart-container { display: flex; flex-direction: column; gap: 0.8rem; position: relative; }
 .chart-row {
@@ -130,14 +130,14 @@ button:hover { background: var(--cyan); color: #000; }
 .bar-val-left  { margin-right: 6px; }
 .bar-val-right { margin-left:  6px; }
 
-/* Progress bar color overrides (set dynamically via JS) */
+
 .rf-bar   { background: var(--cyan); }
 .lstm-bar { background: #b026ff; }
 
 @keyframes fade-in  { to { opacity: 1; } }
 @keyframes row-enter { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
 
-/* Glitch animation layers */
+
 .glitch {
     position: relative;
     font-size: 2rem;
@@ -179,7 +179,7 @@ button:hover { background: var(--cyan); color: #000; }
     90%          { clip-path: inset(60% 0 0 0); transform: translateX(0); }
 }
 
-/* CRT scanline overlay */
+
 .terminal-container::after {
     content: '';
     position: absolute;

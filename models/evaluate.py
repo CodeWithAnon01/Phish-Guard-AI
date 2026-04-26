@@ -1,16 +1,4 @@
-"""
-evaluate.py
-===========
-Standalone evaluation script for all trained PhishGuard AI models.
 
-Prints accuracy, classification report, and confusion matrix for:
-  1. Random Forest  (UCI Phishing Websites features)
-  2. LSTM           (character-level URL tokenization)
-  3. Ensemble       (80% RF + 20% LSTM weighted combination)
-
-Usage:
-    python models/evaluate.py
-"""
 
 import sys
 import os
@@ -25,8 +13,6 @@ from sklearn.metrics import (
     accuracy_score, classification_report, confusion_matrix, roc_auc_score
 )
 from models.train_lstm import URL_LSTM
-
-# ── Paths ─────────────────────────────────────────────────────────────────────
 BASE_DIR   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR   = os.path.join(BASE_DIR, 'data')
 MODELS_DIR = os.path.join(BASE_DIR, 'models')
@@ -68,7 +54,6 @@ def evaluate_rf(rf_model, feature_names):
     x_rf = np.array([[row.get(k, 0) if hasattr(row, 'get') else row[i]
                        for i, k in enumerate(feature_names)]
                      for row in [X_test.iloc[i] for i in range(len(X_test))]])
-    # simpler: use DataFrame directly
     x_rf = X_test[feature_names].values
 
     y_pred      = rf_model.predict(x_rf)
@@ -131,8 +116,6 @@ def evaluate_ensemble(rf_prob, lstm_prob, y_test):
     print(f"\n{SEP}")
     print("  ENSEMBLE EVALUATION (80% RF + 20% LSTM)")
     print(SEP)
-
-    # Trim to common length (RF uses UCI test set, LSTM uses Kaggle test set)
     n         = min(len(rf_prob), len(lstm_prob), len(y_test))
     ens_prob  = 0.80 * rf_prob[:n] + 0.20 * lstm_prob[:n]
     y_pred    = (ens_prob > 0.5).astype(int)
@@ -161,9 +144,6 @@ def main():
 
     rf_prob,   y_rf   = evaluate_rf(rf_model, feature_names)
     lstm_prob, y_lstm = evaluate_lstm(lstm_model)
-
-    # Only run ensemble evaluation if both test sets have the same size
-    # (i.e., user trained both on the same data split)
     if len(rf_prob) == len(lstm_prob):
         evaluate_ensemble(rf_prob, lstm_prob, y_rf)
     else:

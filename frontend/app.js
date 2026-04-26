@@ -1,12 +1,6 @@
-/* ============================================================
-   PhishGuard AI — Frontend Engine
-   Handles API communication, animated result rendering,
-   and SHAP threat matrix visualization.
-   ============================================================ */
+
 
 const API_BASE = 'http://127.0.0.1:8000';
-
-// --- DOM References ---
 const analyzeBtn    = document.getElementById('analyze-btn');
 const urlInput      = document.getElementById('url-input');
 const loader        = document.getElementById('loader');
@@ -21,22 +15,12 @@ const rfBar         = document.getElementById('rf-bar');
 const lstmProbVal   = document.getElementById('lstm-prob-val');
 const lstmBar       = document.getElementById('lstm-bar');
 const threatChart   = document.getElementById('threat-chart');
-
-// --- Event Bindings ---
 analyzeBtn.addEventListener('click', analyzeUrl);
 urlInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') analyzeUrl(); });
-
-// Glitch effect on title at startup
 initGlitch();
-
-// ============================================================
-// Core Analysis Flow
-// ============================================================
 
 async function analyzeUrl() {
     const url = urlInput.value.trim();
-
-    // Reset state
     errorBox.classList.add('hidden');
     results.classList.add('hidden');
     errorBox.textContent = '';
@@ -45,8 +29,6 @@ async function analyzeUrl() {
         showError('SYSTEM ERROR: NO TARGET URL PROVIDED. AWAITING INPUT.');
         return;
     }
-
-    // Disable button during request
     analyzeBtn.disabled = true;
     analyzeBtn.textContent = '[ SCANNING... ]';
     loader.classList.remove('hidden');
@@ -82,31 +64,17 @@ async function analyzeUrl() {
     }
 }
 
-// ============================================================
-// Result Rendering
-// ============================================================
-
 function renderResults(data) {
     const isPhishing = data.verdict === 'Phishing';
-
-    // Verdict panel
     verdictBanner.className = `verdict-panel ${isPhishing ? 'danger' : 'safe'}`;
     verdictIcon.textContent  = isPhishing ? '[!]' : '[✓]';
     verdictText.textContent  = isPhishing ? '🚨  PHISHING DETECTED' : '✅  URL IS SAFE';
-
-    // Animated confidence counter
     animateCounter(confidenceVal, 0, data.confidence * 100, 900, '%');
-
-    // RF probability bar
     const rfPct  = (data.rf_prob  * 100);
     const lstmPct = (data.lstm_prob * 100);
     renderProbBar(rfBar,   rfProbVal,   rfPct,   isPhishing);
     renderProbBar(lstmBar, lstmProbVal, lstmPct, isPhishing);
-
-    // SHAP Threat Matrix
     renderThreatMatrix(data.threat_matrix);
-
-    // Show results with entrance animation
     results.classList.remove('hidden');
     results.style.animation = 'none';
     requestAnimationFrame(() => {
@@ -115,11 +83,8 @@ function renderResults(data) {
 }
 
 function renderProbBar(barEl, labelEl, pct, isPhishing) {
-    // Color the bar: high probability in a phishing verdcit = danger red
     const pctFormatted = pct.toFixed(1);
     barEl.style.width = '0%';
-
-    // Determine dangerous threshold: RF prob > 50% in phishing context
     const isDangerous = pct > 50;
     barEl.style.background = isDangerous
         ? 'var(--red)'
@@ -127,8 +92,6 @@ function renderProbBar(barEl, labelEl, pct, isPhishing) {
     barEl.style.boxShadow = isDangerous
         ? '0 0 8px var(--red)'
         : (pct > 30 ? '0 0 8px #f59e0b' : '0 0 8px var(--green)');
-
-    // Animate width
     requestAnimationFrame(() => {
         setTimeout(() => { barEl.style.width = `${pct}%`; }, 50);
     });
@@ -187,8 +150,6 @@ function renderThreatMatrix(threatMatrix) {
         `;
         threatChart.appendChild(row);
     });
-
-    // Animate all bars after DOM insertion
     requestAnimationFrame(() => {
         setTimeout(() => {
             threatChart.querySelectorAll('.bar-fill[data-target]').forEach(bar => {
@@ -198,12 +159,7 @@ function renderThreatMatrix(threatMatrix) {
     });
 }
 
-// ============================================================
-// Utility Functions
-// ============================================================
-
 function formatFeatureValue(featureName, value) {
-    // Map numeric values to human-readable labels
     if (value === 1)  return '[ SAFE ]';
     if (value === -1) return '[ PHISH ]';
     if (value === 0)  return '[ SUSPICIOUS ]';
@@ -255,8 +211,6 @@ function setRandomScanText() {
         i = (i + 1) % SCAN_TEXTS.length;
         el.textContent = SCAN_TEXTS[i];
     }, 900);
-
-    // Auto-clear when loader hides
     const observer = new MutationObserver(() => {
         if (loader.classList.contains('hidden')) {
             clearInterval(scanTextInterval);
@@ -265,10 +219,6 @@ function setRandomScanText() {
     });
     observer.observe(loader, { attributes: true, attributeFilter: ['class'] });
 }
-
-// ============================================================
-// Glitch Title Animation
-// ============================================================
 
 function initGlitch() {
     const glitchEl = document.querySelector('.glitch');
@@ -295,8 +245,6 @@ function initGlitch() {
             iterations += 1 / 2;
         }, 35);
     }
-
-    // Trigger on load + periodically
     triggerGlitch();
     setInterval(triggerGlitch, 8000);
 }

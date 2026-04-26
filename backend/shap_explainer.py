@@ -13,8 +13,7 @@ warnings.filterwarnings('ignore')
 
 
 class ShapExplainer:
-    """SHAP explainer that reuses the already-loaded EnsembleEngine singleton
-    to avoid double-loading RF + LSTM weights into memory."""
+    
 
     def __init__(self, ensemble_engine):
         self.engine = ensemble_engine
@@ -35,8 +34,6 @@ class ShapExplainer:
         x_array  = np.array([[features.get(k, -1) for k in self.feature_names]])
 
         shap_values = self.explainer.shap_values(x_array)
-
-        # Handle all shapes sklearn TreeExplainer can return
         if isinstance(shap_values, list):
             sv = shap_values[1][0]
         elif len(shap_values.shape) == 3:
@@ -56,19 +53,12 @@ class ShapExplainer:
 
         threat_matrix.sort(key=lambda x: abs(x['shap_score']), reverse=True)
         return threat_matrix[:10]
-
-
-# ── Lazy singleton ─────────────────────────────────────────────────────────────
-# Initialised using the ALREADY LOADED ensemble engine so RF + LSTM weights are
-# only held in memory ONCE across the entire process.
 _explainer = None
 
 
 def generate_threat_matrix(url: str) -> list:
     global _explainer
     if _explainer is None:
-        # Import here (not at module level) so the ensemble singleton has time
-        # to be fully initialised before we grab a reference to it.
         import models.ensemble as _ensemble_mod
         if _ensemble_mod.engine is None:
             _ensemble_mod.ensemble_predict("https://google.com")

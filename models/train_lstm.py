@@ -1,15 +1,4 @@
-"""
-train_lstm.py
-=============
-Trains a Bidirectional LSTM on character-level URL tokenizations
-to classify URLs as phishing (1) or safe (0).
 
-Architecture:
-  Embedding(vocab_size, 32) → BiLSTM(64 hidden) → Dropout(0.5) → Linear(1) → Sigmoid
-
-Usage:
-    python models/train_lstm.py
-"""
 
 import torch
 import torch.nn as nn
@@ -24,15 +13,7 @@ MAX_LEN = 200
 
 
 class URL_LSTM(nn.Module):
-    """Bidirectional LSTM for URL phishing detection.
-
-    Args:
-        vocab_size (int): Number of unique characters + 1 (for padding idx 0).
-        embedding_dim (int): Character embedding dimension. Default 32.
-        hidden_dim (int): LSTM hidden state size (per direction). Default 64.
-        drop_prob (float): Dropout rate applied to the final LSTM hidden state.
-        bidirectional (bool): Use bidirectional LSTM. Default True.
-    """
+    
 
     def __init__(
         self,
@@ -54,25 +35,22 @@ class URL_LSTM(nn.Module):
             bidirectional=bidirectional,
         )
         self.dropout = nn.Dropout(drop_prob)
-
-        # When bidirectional: final hidden = [forward || backward] → 2 * hidden_dim
         fc_input_dim = hidden_dim * (2 if bidirectional else 1)
         self.fc      = nn.Linear(fc_input_dim, 1)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        embedded = self.embedding(x)                       # (B, T, E)
-        _, (hidden, _) = self.lstm(embedded)               # hidden: (2, B, H) if bidir
+        embedded = self.embedding(x)
+        _, (hidden, _) = self.lstm(embedded)
 
         if self.bidirectional:
-            # Concatenate forward (hidden[0]) and backward (hidden[1]) final states
-            out = torch.cat([hidden[0], hidden[1]], dim=-1)   # (B, 2H)
+            out = torch.cat([hidden[0], hidden[1]], dim=-1)
         else:
-            out = hidden[-1]                                   # (B, H)
+            out = hidden[-1]
 
         out = self.dropout(out)
         out = self.fc(out)
-        return self.sigmoid(out).squeeze(-1)               # (B,)
+        return self.sigmoid(out).squeeze(-1)
 
 
 def train():
@@ -163,8 +141,6 @@ def train():
             if epochs_no_improve >= patience:
                 print("Early stopping triggered on validation loss!")
                 break
-
-    # ── Final test evaluation ────────────────────────────────────────────────
     print("\nLoading best checkpoint for final evaluation...")
     model.load_state_dict(
         torch.load(model_path, map_location=device, weights_only=True)
