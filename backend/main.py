@@ -8,14 +8,27 @@ from pydantic import BaseModel
 from contextlib import asynccontextmanager
 from backend.predictor import analyze_url
 
+from backend.shap_explainer import generate_threat_matrix as _warm_shap
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    print("SYSTEM LOG: Warming up ensemble engine (RF + LSTM)...")
     try:
         analyze_url("https://google.com")
-        print("SYSTEM LOG: Models loaded into memory successfully.")
+        print("SYSTEM LOG: Ensemble engine loaded successfully.")
     except Exception as e:
-        print(f"SYSTEM LOG: Warning loading models: {e}")
+        print(f"SYSTEM LOG: Warning — ensemble warm-up failed: {e}")
+
+    print("SYSTEM LOG: Warming up SHAP explainer (this may take ~15s on first run)...")
+    try:
+        _warm_shap("https://google.com")
+        print("SYSTEM LOG: SHAP explainer ready.")
+    except Exception as e:
+        print(f"SYSTEM LOG: Warning — SHAP warm-up failed: {e}")
+
+    print("SYSTEM LOG: PhishGuard API fully online and ready.")
     yield
+
 
 app = FastAPI(title="PhishGuard AI Predictor API", lifespan=lifespan)
 
